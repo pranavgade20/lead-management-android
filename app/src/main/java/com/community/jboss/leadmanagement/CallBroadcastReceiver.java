@@ -14,7 +14,7 @@ import android.text.TextUtils;
 
 import com.community.jboss.leadmanagement.main.contacts.editcontact.EditContactActivity;
 
-public class CallReceiver extends BroadcastReceiver {
+public class CallBroadcastReceiver extends BroadcastReceiver {
     private static final int ID = 47981;
 
     private String number;
@@ -47,7 +47,7 @@ public class CallReceiver extends BroadcastReceiver {
         }
     }
 
-    private void hideNotification() {
+    public void hideNotification() {
         final NotificationManager manager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) {
@@ -55,7 +55,7 @@ public class CallReceiver extends BroadcastReceiver {
         }
     }
 
-    private void showNotification() {
+    public void showNotification() {
 
         final Intent notificationIntent = new Intent(mContext, EditContactActivity.class);
         String CHANNEL_ID = "lead-management-ch";
@@ -66,11 +66,16 @@ public class CallReceiver extends BroadcastReceiver {
         final PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        Intent startCallRecordIntent = new Intent(mContext, CallRecordActivity.class);
+        startCallRecordIntent.putExtra("notifId", ID);
+        PendingIntent startCallRecordPendingIntent = PendingIntent.getActivity(mContext, 1, startCallRecordIntent, 0);
+
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext)
                 .setSmallIcon(R.drawable.ic_call_black_24dp)
                 .setContentTitle("Call in Progress")
                 .setTicker("Lead Management")
                 .setContentIntent(contentIntent)
+                .addAction(R.drawable.ic_call_black_24dp, "Start Recording", startCallRecordPendingIntent)
                 .setContentText("Number: " + number)
                 .setChannelId(CHANNEL_ID);
 
