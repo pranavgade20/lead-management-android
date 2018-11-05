@@ -53,6 +53,12 @@ public class CallBroadcastReceiver extends BroadcastReceiver {
         if (manager != null) {
             manager.cancel(ID);
         }
+
+        if (CallRecordActivity.mRecorder != null) {
+            CallRecordActivity.mRecorder.stop();
+            CallRecordActivity.mRecorder.release();
+            CallRecordActivity.mRecorder = null;
+        }
     }
 
     public void showNotification() {
@@ -67,6 +73,7 @@ public class CallBroadcastReceiver extends BroadcastReceiver {
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent startCallRecordIntent = new Intent(mContext, CallRecordActivity.class);
+        //notifID, filePath(not absolutely necessary), stopRecord(optional) should be put
         startCallRecordIntent.putExtra("notifId", ID);
         PendingIntent startCallRecordPendingIntent = PendingIntent.getActivity(mContext, 1, startCallRecordIntent, 0);
 
