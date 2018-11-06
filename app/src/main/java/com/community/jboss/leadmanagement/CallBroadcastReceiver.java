@@ -14,6 +14,11 @@ import android.text.TextUtils;
 
 import com.community.jboss.leadmanagement.main.contacts.editcontact.EditContactActivity;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 public class CallBroadcastReceiver extends BroadcastReceiver {
     private static final int ID = 47981;
 
@@ -54,10 +59,10 @@ public class CallBroadcastReceiver extends BroadcastReceiver {
             manager.cancel(ID);
         }
 
-        if (CallRecordActivity.mRecorder != null) {
-            CallRecordActivity.mRecorder.stop();
-            CallRecordActivity.mRecorder.release();
-            CallRecordActivity.mRecorder = null;
+        if (EditContactActivity.mRecorder != null) {
+            EditContactActivity.mRecorder.stop();
+            EditContactActivity.mRecorder.release();
+            EditContactActivity.mRecorder = null;
         }
     }
 
@@ -72,9 +77,12 @@ public class CallBroadcastReceiver extends BroadcastReceiver {
         final PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent startCallRecordIntent = new Intent(mContext, CallRecordActivity.class);
-        //notifID, filePath(not absolutely necessary), stopRecord(optional) should be put
+        Intent startCallRecordIntent = new Intent(mContext, EditContactActivity.class);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm_ss");
+        startCallRecordIntent.putExtra("fileName", dateFormat.format(new Date()));
         startCallRecordIntent.putExtra("notifId", ID);
+        startCallRecordIntent.putExtra("record", true);
+        startCallRecordIntent.putExtra(EditContactActivity.INTENT_EXTRA_CONTACT_NUM, number);
         PendingIntent startCallRecordPendingIntent = PendingIntent.getActivity(mContext, 1, startCallRecordIntent, 0);
 
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext)

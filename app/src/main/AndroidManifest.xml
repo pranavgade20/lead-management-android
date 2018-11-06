@@ -54,11 +54,11 @@
             android:name=".main.contacts.importcontact.ImportContactActivity"
             android:parentActivityName=".main.MainActivity" />
         <activity android:name=".InfoSliderActivity" />
-        <activity
-            android:name=".CallRecordActivity"
-            android:label="@string/title_activity_call_record"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CallRecordsList"></activity>
+
+        <service
+            android:name=".StopCallRecord"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
