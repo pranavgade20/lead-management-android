@@ -10,7 +10,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+
+import com.community.jboss.leadmanagement.main.MainActivity;
+import com.community.jboss.leadmanagement.main.contacts.editcontact.EditContactActivity;
 
 public class CallReceiver extends BroadcastReceiver {
 
@@ -27,14 +31,22 @@ public class CallReceiver extends BroadcastReceiver {
 
         if(tm == null) return;
 
-        switch(tm.getCallState()){
-            case TelephonyManager.CALL_STATE_IDLE:
-                hideNotification();
-                break;
-            case TelephonyManager.CALL_STATE_OFFHOOK:
-                showNotification();
-                break;
-        }
+        tm.listen(new PhoneStateListener(){
+            @Override
+            public void onCallStateChanged(int state, String incomingNumber) {
+                super.onCallStateChanged(state, incomingNumber);
+                switch(state){
+                    case TelephonyManager.CALL_STATE_IDLE:
+                        hideNotification();
+                        break;
+                    case TelephonyManager.CALL_STATE_OFFHOOK:
+                        showNotification(incomingNumber);
+                        break;
+                }
+                System.out.println("incomingNumber : "+incomingNumber);
+            }
+        },PhoneStateListener.LISTEN_CALL_STATE);
+
     }
 
     private void hideNotification() {
@@ -49,15 +61,15 @@ public class CallReceiver extends BroadcastReceiver {
     }
 
 
-    public void showNotification() {
+    public void showNotification(String number) {
 
+        // Call Recording Service Intent
         Intent notifyIntent = new Intent("com.aykuttasil.callrecord.CallRecord");
         notifyIntent.setClass(mContext, CallRecorderService.class);
 
         PendingIntent notifyPendingIntent = PendingIntent.getService(
                 mContext, 0, notifyIntent, 0
         );
-
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat
@@ -69,11 +81,17 @@ public class CallReceiver extends BroadcastReceiver {
                         .addAction(R.drawable.ic_record_round, "Record now",
                                 notifyPendingIntent);
 
+
+        // Contact Details Intent
+        Intent contentIntent = new Intent(mContext, EditContactActivity.class);
+        PendingIntent contentPendingIntent = PendingIntent.getActivity(mContext, 0, contentIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
         final NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext)
                 .setSmallIcon(R.drawable.ic_phone)
                 .setContentTitle("Call in Progress")
                 .setTicker("Lead Management")
-                .setContentIntent(contentIntent)
+                .setContentIntent(contentPendingIntent)
                 .setContentText("Number: " + number)
                 .setChannelId(CHANNEL_ID);
 
