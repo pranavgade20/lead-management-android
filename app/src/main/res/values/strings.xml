@@ -73,6 +73,9 @@
     <string name="google_title_text">Google Sign In</string>
 
     <string name="phone_title_text">Phone Number</string>
+    <string name="location">Location</string>
+    <string name="query">Query</string>
+    <string name="notes">Notes</string>
 
     <string name="preferences_name">com.community.jboss.leadmanagement.preferences</string>
     <string name="was_run_before_key">com.community.jboss.leadmanagement.wasrunbefore</string>

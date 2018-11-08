@@ -58,7 +58,7 @@ import static com.community.jboss.leadmanagement.SettingsActivity.PREF_DARK_THEM
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private final int ID = 512;
+    private int ID;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.fab)
@@ -131,9 +131,10 @@ public class MainActivity extends BaseActivity
 
 
         permissionManager = new PermissionManager(this, this);
-        if (!permissionManager.permissionStatus(Manifest.permission.READ_PHONE_STATE)) {
-            permissionManager.requestPermission(ID, Manifest.permission.READ_PHONE_STATE);
-        }
+
+        ID = permissionManager.checkAndAskPermissions(Manifest.permission.READ_PHONE_STATE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.RECORD_AUDIO);
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
