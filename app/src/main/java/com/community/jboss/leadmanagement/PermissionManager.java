@@ -8,6 +8,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 
 public class PermissionManager implements ActivityCompat.OnRequestPermissionsResultCallback{
@@ -28,6 +31,25 @@ public class PermissionManager implements ActivityCompat.OnRequestPermissionsRes
         ActivityCompat.requestPermissions(activity,
                 new String[]{permission},
                 constantInt);
+    }
+
+    public int checkAndAskPermissions(String... permissions){
+
+        // Bound: 32767 - Maximum signed 16 bit integer
+        int requestId = new Random().nextInt(32767);
+
+        List<String> nonGrantedPermission = new ArrayList<>();
+
+        for(String permission: permissions){
+            if(ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED){
+                nonGrantedPermission.add(permission);
+            }
+        }
+
+        if(!nonGrantedPermission.isEmpty()){
+            ActivityCompat.requestPermissions(activity, nonGrantedPermission.toArray(new String[nonGrantedPermission.size()]), requestId);
+        }
+        return requestId;
     }
 
     @Override
