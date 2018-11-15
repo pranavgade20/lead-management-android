@@ -7,7 +7,7 @@ import com.community.jboss.leadmanagement.data.daos.ContactDao;
 import com.community.jboss.leadmanagement.data.daos.ContactNumberDao;
 
 public class DbUtil {
-    private DbUtil() {
+    public DbUtil() {
         // Prevent this util class from being instantiated
     }
 
