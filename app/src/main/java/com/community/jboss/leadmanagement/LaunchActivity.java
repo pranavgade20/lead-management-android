@@ -8,11 +8,19 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.community.jboss.leadmanagement.main.MainActivity;
 
+import static com.community.jboss.leadmanagement.main.MainActivity.*;
+
 public class LaunchActivity extends AppCompatActivity {
     boolean wasRunBefore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (!isUserSignedIn) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("signIn", true);
+            startActivity(intent);
+        }
+
         super.onCreate(savedInstanceState);
 
         SharedPreferences preferences = getSharedPreferences(getString(R.string.preferences_name), Context.MODE_PRIVATE);

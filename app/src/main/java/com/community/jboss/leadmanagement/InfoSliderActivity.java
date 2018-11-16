@@ -10,10 +10,18 @@ import com.community.jboss.leadmanagement.main.MainActivity;
 import com.hololo.tutorial.library.Step;
 import com.hololo.tutorial.library.TutorialActivity;
 
+import static com.community.jboss.leadmanagement.main.MainActivity.*;
+
 public class InfoSliderActivity extends TutorialActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (!isUserSignedIn) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("signIn", true);
+            startActivity(intent);
+        }
+
         super.onCreate(savedInstanceState);
 
         addFragment(new Step.Builder().setTitle(getString(R.string.slide_1_header))

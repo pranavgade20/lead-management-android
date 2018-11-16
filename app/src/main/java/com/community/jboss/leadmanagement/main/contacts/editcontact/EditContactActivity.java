@@ -14,11 +14,13 @@ import android.widget.EditText;
 
 import com.community.jboss.leadmanagement.R;
 import com.community.jboss.leadmanagement.data.entities.ContactNumber;
+import com.community.jboss.leadmanagement.main.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.community.jboss.leadmanagement.SettingsActivity.PREF_DARK_THEME;
+import static com.community.jboss.leadmanagement.main.MainActivity.*;
 
 public class EditContactActivity extends AppCompatActivity {
     public static final String INTENT_EXTRA_CONTACT_NUM = "INTENT_EXTRA_CONTACT_NUM";
@@ -35,6 +37,12 @@ public class EditContactActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if (!isUserSignedIn) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("signIn", true);
+            startActivity(intent);
+        }
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean useDarkTheme = preferences.getBoolean(PREF_DARK_THEME, false);
 

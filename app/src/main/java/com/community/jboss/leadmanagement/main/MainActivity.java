@@ -77,6 +77,8 @@ public class MainActivity extends BaseActivity
     private MainActivityViewModel mViewModel;
     private PermissionManager permissionManager;
 
+    public static boolean isUserSignedIn = false;
+
     public static boolean useDarkTheme;
 
     @Override
@@ -129,6 +131,13 @@ public class MainActivity extends BaseActivity
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         mAuth = FirebaseAuth.getInstance();
 
+        Intent intent = getIntent();
+        if (intent.hasExtra("signIn") && intent.getBooleanExtra("signIn", false)) {
+            signIn();
+        }
+
+        // Prompt user to sign in if not signed in
+        if (!isUserSignedIn) signIn();
 
         permissionManager = new PermissionManager(this, this);
         if (!permissionManager.permissionStatus(Manifest.permission.READ_PHONE_STATE)) {
@@ -317,13 +326,15 @@ public class MainActivity extends BaseActivity
                 });
     }
 
-
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     private void signOut() {
+        // Set user state to signed out
+        isUserSignedIn = false;
+
         // Firebase sign out
         mAuth.signOut();
 
@@ -347,6 +358,7 @@ public class MainActivity extends BaseActivity
         CircularImageView mProfileImageView = header.findViewById(R.id.nav_prof_pic);
 
         if (user != null) {
+            isUserSignedIn = true;
             Toast.makeText(getApplicationContext(), "Signed in", Toast.LENGTH_SHORT).show();
 
             mStatusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
@@ -357,6 +369,7 @@ public class MainActivity extends BaseActivity
             header.findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             header.findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
         } else {
+            isUserSignedIn = false;
             Toast.makeText(getApplicationContext(), "Signed out", Toast.LENGTH_SHORT).show();
 
             mStatusTextView.setText(R.string.app_desc);

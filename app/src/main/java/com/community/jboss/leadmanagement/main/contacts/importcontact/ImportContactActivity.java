@@ -1,6 +1,7 @@
 package com.community.jboss.leadmanagement.main.contacts.importcontact;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import com.community.jboss.leadmanagement.data.daos.ContactDao;
 import com.community.jboss.leadmanagement.data.daos.ContactNumberDao;
 import com.community.jboss.leadmanagement.data.entities.Contact;
 import com.community.jboss.leadmanagement.data.entities.ContactNumber;
+import com.community.jboss.leadmanagement.main.MainActivity;
 import com.community.jboss.leadmanagement.utils.DbUtil;
 
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.community.jboss.leadmanagement.SettingsActivity.PREF_DARK_THEME;
+import static com.community.jboss.leadmanagement.main.MainActivity.*;
 
 public class ImportContactActivity extends AppCompatActivity {
 
@@ -40,6 +43,12 @@ public class ImportContactActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (!isUserSignedIn) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("signIn", true);
+            startActivity(intent);
+        }
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean useDarkTheme = preferences.getBoolean(PREF_DARK_THEME, false);
 

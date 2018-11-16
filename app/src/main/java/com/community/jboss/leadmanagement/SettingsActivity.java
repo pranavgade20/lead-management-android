@@ -16,6 +16,8 @@ import com.community.jboss.leadmanagement.main.contacts.editcontact.EditContactA
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.community.jboss.leadmanagement.main.MainActivity.isUserSignedIn;
+
 public class SettingsActivity extends FragmentActivity {
     @BindView(R.id.settings_bar)
     Toolbar toolbar;
@@ -24,6 +26,12 @@ public class SettingsActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (!isUserSignedIn) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("signIn", true);
+            startActivity(intent);
+        }
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean useDarkTheme = preferences.getBoolean(PREF_DARK_THEME, false);
 
