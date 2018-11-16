@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta3'
 
     //Cardview
-    implementation 'com.android.support:cardview-v7:27.0.2'
+    implementation 'androidx.cardview:cardview:1.0.0'
 
     // Test
     implementation 'com.android.support:support-v4:27.0.2'
